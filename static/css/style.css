@@ -1038,3 +1038,85 @@ text-decoration:none;
 
     transition:width 3s linear;
 }
+
+.notification-btn{
+    font-size:26px;
+    text-decoration:none;
+    color:white;
+
+    margin-right:10px;
+}
+
+.notification-btn{
+    position:relative;
+    font-size:26px;
+    text-decoration:none;
+    color:white;
+}
+
+.notification-count{
+    position:absolute;
+    top:-8px;
+    right:-10px;
+
+    background:red;
+    color:white;
+
+    width:18px;
+    height:18px;
+
+    border-radius:50%;
+
+    font-size:12px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.notification-card{
+
+    display:flex;
+    align-items:center;
+
+    gap:15px;
+
+    background:#16213e;
+
+    padding:15px;
+    margin:15px 0;
+
+    border-radius:15px;
+
+    width:550px;
+}
+
+.notification-pic{
+
+    width:55px;
+    height:55px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:2px solid #4da6ff;
+}
+
+.notification-content{
+
+    display:flex;
+    flex-direction:column;
+}
+
+.notification-content strong{
+
+    font-size:18px;
+    color:#4da6ff;
+}
+
+.notification-content p{
+
+    margin-top:5px;
+    color:white;
+}

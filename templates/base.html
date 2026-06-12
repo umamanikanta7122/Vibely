@@ -30,15 +30,27 @@
 
 <div class="top-right-section">
 
-    
+   <a href="/notifications/"
+   class="notification-btn">
+
+    🔔
+
+    {% if notification_count > 0 %}
+        <span class="notification-count">
+            {{ notification_count }}
+        </span>
+    {% endif %}
+
+</a>
+
+    <a href="/logout/" class="logout-btn">
+        Logout
+    </a>
 
     <a href="/profile/">
         <img
             src="{{ user.profile.profile_picture.url }}"
             class="nav-profile-pic">
-    </a>
-    <a href="/logout/" class="logout-btn">
-        Logout
     </a>
 
 </div>
@@ -54,9 +66,7 @@
     {% endblock %}
 
 </div>
-<a href="/" class="logo">
-    Vibely
-</a>
+
 <script>
 
 function toggleComments(postId){

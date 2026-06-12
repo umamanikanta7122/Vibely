@@ -10,6 +10,7 @@ from .forms import RegisterForm, ProfileForm
 from .models import Profile, Follow
 from posts.models import Post
 from posts.models import Story
+from posts.models import Notification
 
 
 def home(request):
@@ -31,14 +32,23 @@ def home(request):
             stories.append(story)
             seen_users.append(story.user)
 
+    notification_count = 0
+    if request.user.is_authenticated:
+        notification_count = Notification.objects.filter(
+            user=request.user,
+            is_read=False
+        ).count()
+
     return render(
         request,
         'home.html',
         {
             'posts': posts,
-            'stories': stories
+            'stories': stories,
+            'notification_count': notification_count
         }
     )
+
 
 def register(request):
     if request.method == 'POST':
@@ -52,10 +62,12 @@ def register(request):
     else:
         form = RegisterForm()
 
-    return render(request, 'accounts/register.html', {'form': form})
+    return render(
+        request,
+        'accounts/register.html',
+        {'form': form}
+    )
 
-
-from django.contrib.auth.decorators import login_required
 
 @login_required
 def profile(request):
@@ -69,12 +81,18 @@ def profile(request):
     ).order_by('-created_at')
 
     posts_count = posts.count()
+
     followers_count = Follow.objects.filter(
         following=request.user
     ).count()
 
     following_count = Follow.objects.filter(
         follower=request.user
+    ).count()
+
+    notification_count = Notification.objects.filter(
+        user=request.user,
+        is_read=False
     ).count()
 
     return render(
@@ -86,8 +104,10 @@ def profile(request):
             'followers_count': followers_count,
             'following_count': following_count,
             'posts_count': posts_count,
+            'notification_count': notification_count
         }
     )
+
 
 @login_required
 def edit_profile(request):
@@ -108,7 +128,6 @@ def edit_profile(request):
             return redirect('/profile/')
 
     else:
-
         form = ProfileForm(
             instance=profile
         )
@@ -118,6 +137,7 @@ def edit_profile(request):
         'accounts/edit_profile.html',
         {'form': form}
     )
+
 
 def user_profile(request, username):
 
@@ -146,6 +166,13 @@ def user_profile(request, username):
         follower=profile_user
     ).count()
 
+    notification_count = 0
+    if request.user.is_authenticated:
+        notification_count = Notification.objects.filter(
+            user=request.user,
+            is_read=False
+        ).count()
+
     return render(
         request,
         'accounts/user_profile.html',
@@ -154,9 +181,11 @@ def user_profile(request, username):
             'posts': posts,
             'is_following': is_following,
             'followers_count': followers_count,
-            'following_count': following_count
+            'following_count': following_count,
+            'notification_count': notification_count
         }
     )
+
 
 @login_required
 def follow_user(request, username):
@@ -183,15 +212,44 @@ def follow_user(request, username):
                 following=user_to_follow
             )
 
+            print("CREATING NOTIFICATION")
+
+    Notification.objects.create(
+    user=user_to_follow,
+    sender=request.user,
+    message="started following you"
+)
+
     return redirect(
         f'/user/{username}/'
     )
 
+
 from django.contrib.auth import logout
-from django.shortcuts import redirect
 
 
 def logout_user(request):
     logout(request)
     return redirect('/login/')
 
+
+@login_required
+def notifications(request):
+
+    notifications = Notification.objects.filter(
+        user=request.user
+    ).order_by('-created_at')
+
+    notification_count = Notification.objects.filter(
+        user=request.user,
+        is_read=False
+    ).count()
+
+    return render(
+        request,
+        'notifications.html',
+        {
+            'notifications': notifications,
+            'notification_count': notification_count
+        }
+    )

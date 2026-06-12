@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Notifications 🔔</h2>
+
+{% for notification in notifications %}
+
+<div class="notification-card">
+
+    {% if notification.sender.profile.profile_picture %}
+
+        <img
+            src="{{ notification.sender.profile.profile_picture.url }}"
+            class="notification-pic">
+
+    {% endif %}
+
+    <div class="notification-content">
+
+        <strong>
+            {{ notification.sender.username }}
+        </strong>
+
+        <p>
+            {{ notification.message }}
+        </p>
+
+    </div>
+
+</div>
+
+{% empty %}
+
+<p>No notifications yet.</p>
+
+{% endfor %}
+
+{% endblock %}

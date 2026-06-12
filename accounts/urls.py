@@ -4,6 +4,7 @@ from .views import home, register, profile, edit_profile
 user_profile
 follow_user
 from .views import logout_user
+from .views import notifications
 
 urlpatterns = [
     path('', home, name='home'),
@@ -31,5 +32,11 @@ path(
     'logout/',
     logout_user,
     name='logout'
+),
+
+path(
+    'notifications/',
+    notifications,
+    name='notifications'
 ),
 ]
