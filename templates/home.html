@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Welcome to Vibely 🚀</h1>
+
+<div class="stories-container">
+
+{% for story in stories %}
+
+   <a href="/story/user/{{ story.user.username }}/">
+  
+        {% if story.user.profile.profile_picture %}
+            <img
+                src="{{ story.user.profile.profile_picture.url }}"
+                class="story-pic">
+        {% endif %}
+
+        <p>{{ story.user.username }}</p>
+
+   </a>
+
+{% endfor %}
+
+</div>
+
+<h2>Latest Posts</h2>
+
+{% for post in posts %}
+
+<div class="post-card">
+
+
+<div class="post-header">
+
+    <!-- Profile picture opens story -->
+
+    <a href="/story/user/{{ post.user.username }}/">
+
+        {% if post.user.profile.profile_picture %}
+            <img
+                src="{{ post.user.profile.profile_picture.url }}"
+                class="post-profile-pic">
+        {% endif %}
+
+    </a>
+
+    <!-- Username opens profile -->
+
+    <a href="/user/{{ post.user.username }}/"
+       class="post-user-link">
+
+        <div class="post-user">
+            {{ post.user.username }}
+        </div>
+
+    </a>
+
+</div>
+
+<div class="post-caption">
+    {{ post.caption }}
+</div>
+
+{% if post.media %}
+
+    {% if ".mp4" in post.media.url %}
+
+  <video
+    width="100%"
+    controls
+    muted
+    autoplay
+    loop>
+
+    <source src="{{ post.media.url }}">
+
+</video>
+
+    {% else %}
+
+        <img
+            src="{{ post.media.url }}"
+            style="width:100%; border-radius:10px; margin-top:10px;">
+
+    {% endif %}
+
+{% endif %}
+
+<div class="post-actions">
+
+    <a href="/like-post/{{ post.id }}/">
+        ❤️ {{ post.like_set.count }} Likes
+    </a>
+
+    <a href="#"
+       onclick="toggleComments('{{ post.id }}'); return false;">
+        💬 {{ post.comment_set.count }} Comments
+    </a>
+
+    <a href="/user/{{ post.user.username }}/">
+        👤 Profile
+    </a>
+
+    <span>
+        👁 {{ post.views }}
+    </span>
+
+    <small>
+        {{ post.created_at|timesince }} ago
+    </small>
+
+</div>
+
+<div id="comments-{{ post.id }}"
+     class="comment-section"
+     style="display:none;">
+
+    {% for comment in post.comment_set.all %}
+
+        <div class="comment-item">
+
+            {% if comment.user.profile.profile_picture %}
+                <img
+                    src="{{ comment.user.profile.profile_picture.url }}"
+                    class="comment-pic">
+            {% endif %}
+
+            <div class="comment-content">
+
+                <span class="comment-user">
+                    {{ comment.user.username }}
+                </span>
+
+                <span class="comment-text">
+                    {{ comment.text }}
+                </span>
+
+            </div>
+
+        </div>
+
+    {% empty %}
+
+        <p>No comments yet.</p>
+
+    {% endfor %}
+
+    <form method="POST"
+          action="/comment/{{ post.id }}/"
+          class="comment-form">
+
+        {% csrf_token %}
+
+        <input
+            type="text"
+            name="text"
+            placeholder="Add comment">
+
+        <button type="submit">
+            Post
+        </button>
+
+    </form>
+
+</div>
+
+
+</div>
+
+{% empty %}
+
+<p>No posts yet.</p>
+
+{% endfor %}
+{% endblock %}

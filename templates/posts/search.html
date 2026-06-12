@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Search Vibely</h2>
+
+<form method="GET">
+
+    <input
+        type="text"
+        name="q"
+        placeholder="Search..."
+        value="{{ query }}">
+
+    <button type="submit">
+        Search
+    </button>
+
+</form>
+
+<hr>
+
+<h3>Users</h3>
+
+{% for user in users %}
+
+<div style="border:1px solid black;padding:10px;margin:10px;">
+
+
+<a href="/user/{{ user.username }}/">
+    {{ user.username }}
+</a>
+
+
+</div>
+
+{% empty %}
+
+<p>No users found.</p>
+
+{% endfor %}
+
+<hr>
+
+{% for user in users %}
+
+<div class="search-user">
+
+    <a href="/user/{{ user.username }}/">
+
+        {% if user.profile.profile_picture %}
+            <img
+                src="{{ user.profile.profile_picture.url }}"
+                class="search-profile-pic">
+        {% endif %}
+
+    </a>
+
+    <a href="/user/{{ user.username }}/"
+       class="search-username">
+
+        {{ user.username }}
+
+    </a>
+
+</div>
+
+{% empty %}
+
+<p>No users found.</p>
+
+{% endfor %}
+{% endblock %}

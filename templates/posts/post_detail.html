@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="post-card">
+
+    <h2>{{ post.user.username }}</h2>
+
+    <p>{{ post.caption }}</p>
+
+    {% if post.media %}
+
+        {% if ".mp4" in post.media.url %}
+
+            <video width="100%" controls>
+                <source src="{{ post.media.url }}">
+            </video>
+
+        {% else %}
+
+            <img
+                src="{{ post.media.url }}"
+                width="100%">
+
+        {% endif %}
+
+    {% endif %}
+
+    <br><br>
+
+    ❤️ {{ post.like_set.count }} Likes
+
+    <br>
+
+    💬 {{ post.comment_set.count }} Comments
+
+    <br>
+    👁 {{ post.views }}
+        </br>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="profile-header">
+
+    {% if profile.cover_photo %}
+    <img
+        src="{{ profile.cover_photo.url }}"
+        class="profile-cover">
+    {% endif %}
+
+    {% if profile.profile_picture %}
+    <img
+        src="{{ profile.profile_picture.url }}"
+        class="profile-pic">
+    {% endif %}
+
+    <h1 class="profile-name">
+        {{ user.username }}
+    </h1>
+    <div class="profile-stats">
+
+    <div>
+        <strong>{{ posts_count }}</strong>
+        <p>Posts</p>
+    </div>
+
+    <div>
+        <strong>{{ followers_count }}</strong>
+        <p>Followers</p>
+    </div>
+
+    <div>
+        <strong>{{ following_count }}</strong>
+        <p>Following</p>
+    </div>
+
+</div>
+
+    <p>{{ profile.bio }}</p>
+
+    <p>📍 {{ profile.location }}</p>
+
+    <p>🌐 {{ profile.website }}</p>
+
+    <a href="/edit-profile/">
+        Edit Profile
+    </a>
+
+</div>
+
+
+
+
+
+</div>
+
+<hr>
+
+<div class="tab-buttons">
+    <button onclick="showPhotos()">📸 Photos</button>
+    <button onclick="showVideos()">🎥 Videos</button>
+</div>
+
+<div id="photos-section" class="posts-grid">
+
+{% for post in posts %}
+
+    {% if post.media and ".mp4" not in post.media.url %}
+
+       <a href="/post/{{ post.id }}/">
+
+<div class="grid-item">
+            <img src="{{ post.media.url }}">
+        </div>
+        
+
+</a>
+
+    {% endif %}
+
+{% endfor %}
+
+</div>
+
+<div id="videos-section"
+     class="posts-grid"
+     style="display:none;">
+
+{% for post in posts %}
+
+    {% if post.media and ".mp4" in post.media.url %}
+
+        <a href="/post/{{ post.id }}/">
+
+<div class="grid-item">
+            <video muted controls>
+                <source src="{{ post.media.url }}">
+            </video>
+        </div>
+        
+
+</a>
+
+    {% endif %}
+
+{% endfor %}
+
+</div>
+
+<script>
+
+function showPhotos() {
+    document.getElementById("photos-section").style.display = "grid";
+    document.getElementById("videos-section").style.display = "none";
+}
+
+function showVideos() {
+    document.getElementById("photos-section").style.display = "none";
+    document.getElementById("videos-section").style.display = "grid";
+}
+
+</script>
+
+</div>
+
+{% endblock %}

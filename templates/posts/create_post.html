@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="form-card">
+
+    <h2>Create New Post 🚀</h2>
+
+   <form method="POST"
+      enctype="multipart/form-data">
+
+
+{% csrf_token %}
+
+<input
+    type="file"
+    name="media"
+    id="mediaInput"
+    accept="image/*,video/*"
+    required>
+
+<br><br>
+
+<img id="previewImage"
+     style="display:none;
+            width:100%;
+            border-radius:15px;">
+
+<video id="previewVideo"
+       controls
+       style="display:none;
+              width:100%;
+              border-radius:15px;">
+</video>
+
+<br>
+
+<textarea
+    name="caption"
+    placeholder="Write a caption..."
+    rows="4"></textarea>
+
+<br>
+
+
+
+<br><br>
+
+<button type="submit">
+    Share
+</button>
+
+</form>
+
+
+</div>
+<script>
+
+function showPhotos(){
+    document.getElementById(
+        "photos-section"
+    ).style.display="grid";
+
+    document.getElementById(
+        "videos-section"
+    ).style.display="none";
+}
+
+function showVideos(){
+    document.getElementById(
+        "photos-section"
+    ).style.display="none";
+
+    document.getElementById(
+        "videos-section"
+    ).style.display="grid";
+}
+
+</script>
+
+{% endblock %}

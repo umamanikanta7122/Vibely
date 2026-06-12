@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="reels-page">
+
+
+<div class="reels-container">
+
+    {% for video in videos %}
+
+    <div class="reel-card">
+
+        <video
+            autoplay
+            muted
+            loop
+            controls
+            playsinline>
+
+            <source src="{{ video.media.url }}">
+
+        </video>
+
+      <div class="reel-info">
+
+    <div class="reel-user">
+
+        {% if video.user.profile.profile_picture %}
+            <img
+                src="{{ video.user.profile.profile_picture.url }}"
+                class="reel-profile-pic">
+        {% endif %}
+
+        <span>
+            {{ video.user.username }}
+        </span>
+
+    </div>
+
+    <p>{{ video.caption }}</p>
+
+</div>
+
+        <div class="reel-actions">
+
+            <a href="/like-post/{{ video.id }}/">
+                ❤️ {{ video.like_set.count }}
+            </a>
+
+            <a href="#"
+               onclick="toggleComments('{{ video.id }}'); return false;">
+                💬 {{ video.comment_set.count }}
+            </a>
+
+            <span>
+                👁 {{ video.views }}
+            </span>
+
+        </div>
+
+        <div id="comments-{{ video.id }}"
+             class="comment-section"
+             style="display:none;">
+
+            {% for comment in video.comment_set.all %}
+
+                <div class="comment-item">
+
+                    <b>{{ comment.user.username }}</b>
+
+                    {{ comment.text }}
+
+                </div>
+
+            {% endfor %}
+
+            <form method="POST"
+                  action="/comment/{{ video.id }}/">
+
+                {% csrf_token %}
+
+                <input
+                    type="text"
+                    name="text"
+                    placeholder="Add comment">
+
+                <button type="submit">
+                    Post
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    {% empty %}
+
+    <p>No reels yet.</p>
+
+    {% endfor %}
+
+</div>
+
+
+</div>
+
+{% endblock %}

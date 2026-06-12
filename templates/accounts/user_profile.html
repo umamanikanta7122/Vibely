@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="profile-user-row">
+
+
+{% if profile_user.profile.profile_picture %}
+<img
+    src="{{ profile_user.profile.profile_picture.url }}"
+    class="profile-pic">
+{% endif %}
+
+<h1 class="profile-name">
+    {{ profile_user.username }}
+</h1>
+
+
+</div>
+
+<div class="profile-stats">
+
+
+<div>
+    <strong>{{ posts.count }}</strong>
+    <p>Posts</p>
+</div>
+
+<div>
+    <strong>{{ followers_count }}</strong>
+    <p>Followers</p>
+</div>
+
+<div>
+    <strong>{{ following_count }}</strong>
+    <p>Following</p>
+</div>
+
+
+</div>
+
+{% if request.user != profile_user %}
+
+<a href="/follow/{{ profile_user.username }}/"
+class="follow-btn">
+
+
+{% if is_following %}
+    Unfollow
+{% else %}
+    Follow
+{% endif %}
+
+
+</a>
+
+{% endif %}
+
+<hr>
+
+<h2>Posts</h2>
+
+{% for post in posts %}
+
+<div style="border:1px solid black;padding:10px;margin:10px;">
+
+
+<p>{{ post.caption }}</p>
+
+{% if post.media %}
+
+    {% if ".mp4" in post.media.url %}
+
+        <video
+            controls
+            style="
+                width:250px;
+                height:400px;
+                object-fit:cover;
+                border-radius:10px;
+            ">
+            <source src="{{ post.media.url }}">
+        </video>
+
+    {% else %}
+
+        <img
+            src="{{ post.media.url }}"
+            style="
+                width:250px;
+                border-radius:10px;
+            ">
+
+    {% endif %}
+
+{% endif %}
+
+
+</div>
+
+{% empty %}
+
+<p>No posts.</p>
+
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+<h1>Total stories: {{ stories|length }}</h1>
+{% block content %}
+
+<div class="story-view">
+
+    <div class="story-progress-container">
+        <div class="story-progress-bar"
+             id="progress-bar">
+        </div>
+    </div>
+
+    {% for story in stories %}
+
+    <div class="story-slide">
+
+        <h2>{{ story.user.username }}</h2>
+
+        {% if ".mp4" in story.media.url %}
+
+            <video
+                autoplay
+                muted
+                controls
+                class="story-media">
+
+                <source src="{{ story.media.url }}">
+
+            </video>
+
+        {% else %}
+
+            <img
+                src="{{ story.media.url }}"
+                class="story-media">
+
+        {% endif %}
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+<script>
+
+let current = 0;
+
+let stories =
+document.querySelectorAll(".story-slide");
+
+let progress =
+document.getElementById("progress-bar");
+
+function showStory(index){
+
+    stories.forEach((story)=>{
+        story.style.display="none";
+    });
+
+    stories[index].style.display="block";
+
+    progress.style.transition="none";
+    progress.style.width="0%";
+
+    setTimeout(()=>{
+        progress.style.transition =
+        "width 3s linear";
+
+        progress.style.width="100%";
+    },50);
+}
+
+showStory(0);
+
+setInterval(()=>{
+
+    current++;
+
+    if(current < stories.length){
+        showStory(current);
+    }
+
+},3000);
+
+</script>
+
+{% endblock %}
