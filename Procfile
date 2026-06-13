@@ -1,0 +1,1 @@
+web: daphne vibely.asgi:application
