@@ -7,6 +7,7 @@ from .views import logout_user
 from .views import notifications
 from .views import notification_count
 
+
 urlpatterns = [
     path('', home, name='home'),
     path('register/', register, name='register'),

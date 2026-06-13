@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from .forms import PostForm, CommentForm, StoryForm
 from .models import Post, Like, Comment, Story, Notification
 from django.db.models import Q
-
+from .models import ChatMessage
 
 @login_required
 def create_post(request):
@@ -310,11 +310,39 @@ def chat_room(request, username):
         f"{max(request.user.id, other_user.id)}"
     )
 
+    # GET OLD CHAT HISTORY
+    messages = ChatMessage.objects.filter(
+        sender__in=[request.user, other_user],
+        receiver__in=[request.user, other_user]
+    ).order_by(
+        "timestamp"
+    )
+    print("MESSAGES COUNT =", messages.count())
     return render(
         request,
         'posts/chat_room.html',
         {
             'room_name': room_name,
             'other_user': other_user,
+            'messages': messages,
+        }
+    )
+
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+
+
+@login_required
+def messages_page(request):
+
+    users = User.objects.exclude(
+        id=request.user.id
+    )
+
+    return render(
+        request,
+        "posts/messages.html",
+        {
+            "users": users
         }
     )

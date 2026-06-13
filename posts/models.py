@@ -5,6 +5,9 @@ CATEGORY_CHOICES = [
     ('video', 'Video'),
     ('reel', 'Reel')
 ]
+from asgiref.sync import sync_to_async
+from django.contrib.auth.models import User
+
 
 
 class Post(models.Model):
@@ -167,3 +170,8 @@ class ChatMessage(models.Model):
             f"{self.sender.username} -> "
             f"{self.receiver.username}"
         )
+    
+    from django.contrib.auth.models import User
+from django.db import models
+
+

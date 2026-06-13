@@ -17,6 +17,8 @@ from .views import reels
 from .views import user_story
 from django.contrib.auth.views import LogoutView
 from .views import chat_room
+from . import views
+from .views import messages_page
 
 
 urlpatterns = [
@@ -96,6 +98,15 @@ path(
     chat_room,
     name='chat_room'
 ),
-
+path(
+    "messages/",
+    views.messages_page,
+    name="messages"
+),
+path(
+    "messages/",
+    views.messages_page,
+    name="messages"
+),
 
 ]

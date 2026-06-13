@@ -2,11 +2,37 @@
 
 {% block content %}
 
-<h2>
-    Chat with {{ other_user.username }}
-</h2>
+<div class="chat-header">
 
-<div id="chat-box"></div>
+    <img
+        src="{{ other_user.profile.profile_picture.url }}"
+        class="chat-header-pic">
+
+    <h3>{{ other_user.username }}</h3>
+
+</div>
+
+<div id="chat-box">
+
+    {% for msg in messages %}
+
+    {% if msg.sender == request.user %}
+
+        <div class="my-message">
+            {{ msg.message }}
+        </div>
+
+    {% else %}
+
+        <div class="other-message">
+            {{ msg.message }}
+        </div>
+
+    {% endif %}
+
+{% endfor %}
+
+</div>
 
 <input
     id="message-input"
@@ -19,6 +45,10 @@
 <script>
 
 const roomName = "{{ room_name }}";
+
+/* NEW */
+const sender = "{{ request.user.username }}";
+const receiver = "{{ other_user.username }}";
 
 const socket = new WebSocket(
     "ws://" +
@@ -42,35 +72,87 @@ socket.onclose = function() {
 
 socket.onmessage = function(e) {
 
-    console.log("MESSAGE RECEIVED");
+    console.log("ONMESSAGE FIRED");
 
     let data = JSON.parse(e.data);
+
+    console.log("DATA =", data);
 
     let chatBox =
         document.getElementById("chat-box");
 
-    chatBox.innerHTML +=
-        "<p>" + data.message + "</p>";
+    if(data.sender === sender){
+
+        console.log("MY MESSAGE");
+
+        chatBox.innerHTML +=
+            "<div class='my-message'>" +
+            data.message +
+            "</div>";
+    }
+
+    else{
+
+        console.log("OTHER MESSAGE");
+
+        chatBox.innerHTML +=
+            "<div class='other-message'>" +
+            data.message +
+            "</div>";
+    }
+
+    chatBox.scrollTop =
+        chatBox.scrollHeight;
 };
+
+let chatBox =
+document.getElementById("chat-box");
+
+chatBox.scrollTop =
+chatBox.scrollHeight;
 
 document
 .getElementById("send-btn")
 .addEventListener("click", function() {
 
     let input =
-        document.getElementById("message-input");
+    document.getElementById("message-input");
+
+    if(input.value.trim() === ""){
+        return;
+    }
 
     console.log("CLICKED");
 
     socket.send(
         JSON.stringify({
-            "message": input.value
+
+            "message": input.value,
+
+            "sender": sender,
+
+            "receiver": receiver
+
         })
     );
 
     input.value = "";
 });
 
-</script>
+document
+.getElementById("message-input")
+.addEventListener("keydown", function(e) {
 
+    console.log("KEY =", e.key);
+
+    if(e.key === "Enter") {
+
+        e.preventDefault();
+
+        document
+        .getElementById("send-btn")
+        .click();
+    }
+});
+</script>
 {% endblock %}

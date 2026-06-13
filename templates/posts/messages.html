@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="messages-container">
+
+    <h2>Messages</h2>
+
+    {% for user in users %}
+
+        <a href="/chat/{{ user.username }}/"
+           class="user-chat-card">
+
+            <div class="user-info">
+
+               <img
+    src="{{ user.profile.profile_picture.url }}"
+    class="chat-user-pic">
+                <div>
+
+                    <p class="username">
+
+                        {{ user.username }}
+
+                    </p>
+
+                    <small>
+
+                        Tap to chat
+
+                    </small>
+
+                </div>
+
+            </div>
+
+        </a>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}
