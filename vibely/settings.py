@@ -26,6 +26,9 @@ SECRET_KEY = 'django-insecure-=xf!6&8r&p8mr15+^jg-f#f$myoa1i$)7@vkup@18i1o^74qf-
 DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
+CSRF_TRUSTED_ORIGINS = [
+    "https://vibely-2-sgds.onrender.com"
+]
 
 
 # Application definition
