@@ -1,17 +1,11 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
-from .forms import PostForm
-from .models import Post
-from .models import Like
-
-from .models import Post, Like, Comment
-from .forms import PostForm, CommentForm
+from .forms import PostForm, CommentForm, StoryForm
+from .models import Post, Like, Comment, Story, Notification
 from django.db.models import Q
-from .models import Story
-from .forms import StoryForm
-from .models import Story
 
 
 @login_required
@@ -94,34 +88,22 @@ def like_post(request, post_id):
             post=post
         )
 
-    return redirect(request.META.get('HTTP_REFERER', '/'))
+        # don't notify if liking own post
+        if post.user != request.user:
 
-@login_required
-def add_comment(request, post_id):
-
-    post = Post.objects.get(
-        id=post_id
-    )
-
-    if request.method == 'POST':
-
-        form = CommentForm(
-            request.POST
-        )
-
-        if form.is_valid():
-
-            comment = form.save(
-                commit=False
+            Notification.objects.create(
+                user=post.user,
+                sender=request.user,
+                post=post,
+                message="liked your post ❤️"
             )
 
-            comment.user = request.user
-
-            comment.post = post
-
-            comment.save()
-
-    return redirect('/')
+    return redirect(
+        request.META.get(
+            'HTTP_REFERER',
+            '/'
+        )
+    )
 
 @login_required
 def edit_post(request, post_id):
@@ -201,35 +183,43 @@ def post_detail(request, post_id):
 @login_required
 def add_comment(request, post_id):
 
-    print("COMMENT VIEW HIT")
-
-    post = Post.objects.get(id=post_id)
+    post = Post.objects.get(
+        id=post_id
+    )
 
     if request.method == 'POST':
 
-        form = CommentForm(request.POST)
-
-        print("POST DATA:", request.POST)
+        form = CommentForm(
+            request.POST
+        )
 
         if form.is_valid():
 
-            print("FORM VALID")
-
-            comment = form.save(commit=False)
+            comment = form.save(
+                commit=False
+            )
 
             comment.user = request.user
             comment.post = post
 
             comment.save()
 
-            print("COMMENT SAVED")
+            # notification only if commenting on another user's post
+            if post.user != request.user:
 
-        else:
+                Notification.objects.create(
+                    user=post.user,
+                    sender=request.user,
+                    post=post,
+                    message=f'commented: "{comment.text}" 💬'
+                )
 
-            print(form.errors)
-
-    return redirect('/')
-
+    return redirect(
+        request.META.get(
+            'HTTP_REFERER',
+            '/'
+        )
+    )
 @login_required
 def create_story(request):
 
@@ -305,4 +295,26 @@ def user_story(request, username):
         request,
         'posts/story_detail.html',
         {'stories': stories}
+    )
+
+@login_required
+def chat_room(request, username):
+
+    other_user = User.objects.get(
+        username=username
+    )
+
+    room_name = (
+        f"chat_"
+        f"{min(request.user.id, other_user.id)}_"
+        f"{max(request.user.id, other_user.id)}"
+    )
+
+    return render(
+        request,
+        'posts/chat_room.html',
+        {
+            'room_name': room_name,
+            'other_user': other_user,
+        }
     )

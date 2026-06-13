@@ -5,6 +5,7 @@ user_profile
 follow_user
 from .views import logout_user
 from .views import notifications
+from .views import notification_count
 
 urlpatterns = [
     path('', home, name='home'),
@@ -38,5 +39,10 @@ path(
     'notifications/',
     notifications,
     name='notifications'
+),
+path(
+    'notification-count/',
+    notification_count,
+    name='notification_count'
 ),
 ]

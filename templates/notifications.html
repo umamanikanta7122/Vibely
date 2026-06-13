@@ -8,25 +8,47 @@
 
 <div class="notification-card">
 
-    {% if notification.sender.profile.profile_picture %}
+    <div class="notification-left">
 
+        {% if notification.sender.profile.profile_picture %}
         <img
             src="{{ notification.sender.profile.profile_picture.url }}"
             class="notification-pic">
+        {% endif %}
+
+        <div class="notification-content">
+
+            <strong>
+                {{ notification.sender.username }}
+            </strong>
+
+            <p>
+                {{ notification.message }}
+            </p>
+
+        </div>
+
+    </div>
+
+   {% if notification.post %}
+
+    {% if ".mp4" in notification.post.media.url %}
+
+        <div class="notification-video-preview">
+
+    <span>▶</span>
+
+</div>
+
+    {% else %}
+
+        <img
+            src="{{ notification.post.media.url }}"
+            class="notification-post-preview">
 
     {% endif %}
 
-    <div class="notification-content">
-
-        <strong>
-            {{ notification.sender.username }}
-        </strong>
-
-        <p>
-            {{ notification.message }}
-        </p>
-
-    </div>
+{% endif %}
 
 </div>
 

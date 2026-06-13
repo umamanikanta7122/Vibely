@@ -214,11 +214,19 @@ def follow_user(request, username):
 
             print("CREATING NOTIFICATION")
 
-    Notification.objects.create(
-    user=user_to_follow,
-    sender=request.user,
-    message="started following you"
-)
+            # delete old same notification first
+            Notification.objects.filter(
+                user=user_to_follow,
+                sender=request.user,
+                message="started following you"
+            ).delete()
+
+            # create fresh one
+            Notification.objects.create(
+                user=user_to_follow,
+                sender=request.user,
+                message="started following you"
+            )
 
     return redirect(
         f'/user/{username}/'
@@ -235,10 +243,14 @@ def logout_user(request):
 
 @login_required
 def notifications(request):
-
     notifications = Notification.objects.filter(
         user=request.user
     ).order_by('-created_at')
+
+    # mark all as read
+    notifications.update(
+        is_read=True
+    )
 
     notification_count = Notification.objects.filter(
         user=request.user,
@@ -253,3 +265,18 @@ def notifications(request):
             'notification_count': notification_count
         }
     )
+
+from django.http import JsonResponse
+
+
+@login_required
+def notification_count(request):
+
+    count = Notification.objects.filter(
+        user=request.user,
+        is_read=False
+    ).count()
+
+    return JsonResponse({
+        'count': count
+    })

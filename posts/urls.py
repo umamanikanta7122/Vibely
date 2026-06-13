@@ -16,6 +16,7 @@ from .views import story_detail
 from .views import reels
 from .views import user_story
 from django.contrib.auth.views import LogoutView
+from .views import chat_room
 
 
 urlpatterns = [
@@ -88,6 +89,12 @@ path(
     'logout/',
     LogoutView.as_view(next_page='/'),
     name='logout'
+),
+
+path(
+    'chat/<str:username>/',
+    chat_room,
+    name='chat_room'
 ),
 
 

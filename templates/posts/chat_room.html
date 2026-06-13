@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>
+    Chat with {{ other_user.username }}
+</h2>
+
+<div id="chat-box"></div>
+
+<input
+    id="message-input"
+    placeholder="Type message...">
+
+<button id="send-btn">
+    Send
+</button>
+
+<script>
+
+const roomName = "{{ room_name }}";
+
+const socket = new WebSocket(
+    "ws://" +
+    window.location.host +
+    "/ws/chat/" +
+    roomName +
+    "/"
+);
+
+socket.onopen = function() {
+    console.log("SOCKET CONNECTED");
+};
+
+socket.onerror = function(error) {
+    console.log("SOCKET ERROR", error);
+};
+
+socket.onclose = function() {
+    console.log("SOCKET CLOSED");
+};
+
+socket.onmessage = function(e) {
+
+    console.log("MESSAGE RECEIVED");
+
+    let data = JSON.parse(e.data);
+
+    let chatBox =
+        document.getElementById("chat-box");
+
+    chatBox.innerHTML +=
+        "<p>" + data.message + "</p>";
+};
+
+document
+.getElementById("send-btn")
+.addEventListener("click", function() {
+
+    let input =
+        document.getElementById("message-input");
+
+    console.log("CLICKED");
+
+    socket.send(
+        JSON.stringify({
+            "message": input.value
+        })
+    );
+
+    input.value = "";
+});
+
+</script>
+
+{% endblock %}

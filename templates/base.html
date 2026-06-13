@@ -29,17 +29,18 @@
  {% if user.is_authenticated %}
 
 <div class="top-right-section">
-
-   <a href="/notifications/"
+<a href="/notifications/"
    class="notification-btn">
 
     🔔
 
-    {% if notification_count > 0 %}
-        <span class="notification-count">
-            {{ notification_count }}
-        </span>
-    {% endif %}
+    <span
+        class="notification-count"
+        id="notification-count">
+
+        {{ notification_count }}
+
+    </span>
 
 </a>
 
@@ -146,6 +147,41 @@ function openGallery(type){
     uploadType = type;
     document.getElementById("galleryInput").click();
 }
+</script><script>
+
+// setInterval(() => {
+
+//     fetch("/notification-count/")
+
+//     .then(response => response.json())
+
+//     .then(data => {
+
+//         let bell =
+//         document.getElementById(
+//             "notification-count"
+//         );
+
+//         if(data.count > 0){
+
+//             bell.innerText =
+//             data.count;
+
+//             bell.style.display =
+//             "flex";
+
+//         }
+
+//         else{
+
+//             bell.style.display =
+//             "none";
+//         }
+
+//     });
+
+// }, 2000);
+
 </script>
 
 </body>

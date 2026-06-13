@@ -1,12 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
+CATEGORY_CHOICES = [
+    ('photo', 'Photo'),
+    ('video', 'Video'),
+    ('reel', 'Reel')
+]
 
-CATEGORY_CHOICES = (
-    ('music', 'Music'),
-    ('art', 'Art'),
-    ('tech', 'Tech'),
-    ('other', 'Other'),
-)
 
 class Post(models.Model):
     user = models.ForeignKey(
@@ -107,11 +106,19 @@ class Notification(models.Model):
         on_delete=models.CASCADE,
         related_name='notifications'
     )
+    
 
     sender = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='sent_notifications'
+    )
+
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
     )
 
     message = models.CharField(
@@ -128,3 +135,35 @@ class Notification(models.Model):
 
     def __str__(self):
         return self.message
+
+
+class ChatMessage(models.Model):
+
+    sender = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='sent_messages'
+    )
+
+    receiver = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='received_messages'
+    )
+
+    message = models.TextField()
+
+    timestamp = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    is_seen = models.BooleanField(
+        default=False
+    )
+
+    def __str__(self):
+
+        return (
+            f"{self.sender.username} -> "
+            f"{self.receiver.username}"
+        )
