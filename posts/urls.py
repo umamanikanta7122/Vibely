@@ -107,6 +107,11 @@ path(
     "messages/",
     views.messages_page,
     name="messages"
+),\
+
+path(
+    "test-media/",
+    views.test_media
 ),
 
 ]

@@ -346,3 +346,25 @@ def messages_page(request):
             "users": users
         }
     )
+
+from django.http import HttpResponse
+from django.conf import settings
+import os
+
+def test_media(request):
+
+    try:
+        files = os.listdir(settings.MEDIA_ROOT)
+
+        return HttpResponse(
+            "MEDIA ROOT = " +
+            str(settings.MEDIA_ROOT) +
+            "<br><br>" +
+            str(files)
+        )
+
+    except Exception as e:
+
+        return HttpResponse(
+            "ERROR = " + str(e)
+        )
