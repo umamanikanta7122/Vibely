@@ -129,11 +129,22 @@ function toggleComments(postId){
     hidden
     accept="image/*,video/*">
 
+    <script>
+    let isLoggedIn = "{{ request.user.is_authenticated|yesno:'true,false' }}";
+</script>
 <script>
 let uploadType = "";
 
 function openUploadMenu(){
+
+    if(isLoggedIn !== "true"){
+        alert("Login to access all features");
+        window.location.href = "/login/";
+        return;
+    }
+
     let menu = document.getElementById("upload-menu");
+
     if(menu.style.display === "none"){
         menu.style.display = "flex";
     } else {
@@ -142,45 +153,25 @@ function openUploadMenu(){
 }
 
 function openGallery(type){
+
+    if(isLoggedIn !== "true"){
+        alert("Login to access all features");
+        window.location.href = "/login/";
+        return;
+    }
+
     uploadType = type;
     document.getElementById("galleryInput").click();
 }
 </script><script>
-
-// setInterval(() => {
-
-//     fetch("/notification-count/")
-
-//     .then(response => response.json())
-
-//     .then(data => {
-
-//         let bell =
-//         document.getElementById(
-//             "notification-count"
-//         );
-
-//         if(data.count > 0){
-
-//             bell.innerText =
-//             data.count;
-
-//             bell.style.display =
-//             "flex";
-
-//         }
-
-//         else{
-
-//             bell.style.display =
-//             "none";
-//         }
-
-//     });
-
-// }, 2000);
-
 </script>
 
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert-box">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
 </body>
 </html>

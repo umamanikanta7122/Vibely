@@ -1298,3 +1298,13 @@ text-decoration:none;
     border-radius:50%;
     object-fit:cover;
 }
+
+.alert-box{
+    background: #ffd966;
+    color: black;
+    padding: 12px;
+    margin: 10px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+}

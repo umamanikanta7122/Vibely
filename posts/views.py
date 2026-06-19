@@ -2,13 +2,15 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-
 from .forms import PostForm, CommentForm, StoryForm
 from .models import Post, Like, Comment, Story, Notification
 from django.db.models import Q
 from .models import ChatMessage
+from django.contrib import messages
+from django.shortcuts import redirect
 
-@login_required
+
+
 def create_post(request):
 
  print("CREATE POST VIEW HIT")
