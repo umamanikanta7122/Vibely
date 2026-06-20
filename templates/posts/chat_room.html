@@ -50,8 +50,13 @@ const roomName = "{{ room_name }}";
 const sender = "{{ request.user.username }}";
 const receiver = "{{ other_user.username }}";
 
+const wsScheme =
+    window.location.protocol === "https:"
+    ? "wss://"
+    : "ws://";
+
 const socket = new WebSocket(
-    "ws://" +
+    wsScheme +
     window.location.host +
     "/ws/chat/" +
     roomName +
