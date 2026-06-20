@@ -1,25 +1,59 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Login</h2>
 
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
+<div class="auth-page">
 
-    <div class="login-actions">
+    <div class="auth-card">
 
-    <button type="submit">
-        Login
-    </button>
+        <div class="auth-logo">
+            ⚡ Vibely
+        </div>
 
-    <a href="/register/" class="register-link">
-       Don’t have an account? Register
-    </a>
+        <h2>Welcome Back</h2>
+
+        <p class="auth-subtitle">
+            Login to continue sharing moments
+        </p>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="input-group">
+
+                <label>Username</label>
+
+                {{ form.username }}
+
+            </div>
+
+            <div class="input-group">
+
+                <label>Password</label>
+
+                {{ form.password }}
+
+            </div>
+
+            <button type="submit"
+                    class="auth-btn">
+
+                Login
+
+            </button>
+
+        </form>
+
+        <a href="/register/"
+           class="switch-auth">
+
+           Don’t have an account? Register
+
+        </a>
+
+    </div>
 
 </div>
-</form>
-
-
 
 {% endblock %}

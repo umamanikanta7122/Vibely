@@ -63,10 +63,13 @@ def delete_post(request, post_id):
         user=request.user
     )
 
+    # delete uploaded file too
+    if post.media:
+        post.media.delete(save=False)
+
     post.delete()
 
     return redirect('/profile/')
-
 @login_required
 def like_post(request, post_id):
 

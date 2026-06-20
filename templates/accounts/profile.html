@@ -2,127 +2,189 @@
 
 {% block content %}
 
-<div class="profile-header">
+<div class="profile-container">
 
-    {% if profile.cover_photo %}
-    <img
-        src="{{ profile.cover_photo.url }}"
-        class="profile-cover">
-    {% endif %}
+    <!-- TOP SECTION -->
+    <div class="profile-top">
 
-    {% if profile.profile_picture %}
-    <img
-        src="{{ profile.profile_picture.url }}"
-        class="profile-pic">
-    {% endif %}
+        {% if profile.cover_photo %}
+            <img src="{{ profile.cover_photo.url }}"
+                 class="profile-cover">
+        {% endif %}
 
-    <h1 class="profile-name">
-        {{ user.username }}
-    </h1>
-    <div class="profile-stats">
+        {% if profile.profile_picture %}
+            <img src="{{ profile.profile_picture.url }}"
+                 class="profile-pic">
+        {% endif %}
 
-    <div>
-        <strong>{{ posts_count }}</strong>
-        <p>Posts</p>
+        <h1 class="profile-name">
+            @{{ user.username }}
+        </h1>
+
     </div>
 
-    <div>
-        <strong>{{ followers_count }}</strong>
-        <p>Followers</p>
-    </div>
 
-    <div>
-        <strong>{{ following_count }}</strong>
-        <p>Following</p>
-    </div>
+    <!-- STATS + ABOUT -->
+    <div class="profile-main-row">
 
-</div>
+        <!-- Stats -->
+        <div class="profile-card stats-card">
 
-    <p>{{ profile.bio }}</p>
+           
 
-    <p>📍 {{ profile.location }}</p>
+            <div class="stat-box">
+                <strong>{{ posts_count }}</strong>
+                <p>Posts</p>
+            </div>
 
-    <p>🌐 {{ profile.website }}</p>
+            <div class="stat-box">
+                <strong>{{ followers_count }}</strong>
+                <p>Followers</p>
+            </div>
 
-    <a href="/edit-profile/">
-        Edit Profile
-    </a>
+            <div class="stat-box">
+                <strong>{{ following_count }}</strong>
+                <p>Following</p>
+            </div>
 
-</div>
-
-
-
-
-
-</div>
-
-<hr>
-
-<div class="tab-buttons">
-    <button onclick="showPhotos()">📸 Photos</button>
-    <button onclick="showVideos()">🎥 Videos</button>
-</div>
-
-<div id="photos-section" class="posts-grid">
-
-{% for post in posts %}
-
-    {% if post.media and ".mp4" not in post.media.url %}
-
-       <a href="/post/{{ post.id }}/">
-
-<div class="grid-item">
-            <img src="{{ post.media.url }}">
         </div>
-        
 
-</a>
 
-    {% endif %}
+        <!-- Bio -->
+        <div class="profile-card bio-card">
 
-{% endfor %}
+            <h3>About Me</h3>
 
-</div>
+            <p>
+                {{ profile.bio|linebreaksbr }}
+            </p>
 
-<div id="videos-section"
-     class="posts-grid"
-     style="display:none;">
-
-{% for post in posts %}
-
-    {% if post.media and ".mp4" in post.media.url %}
-
-        <a href="/post/{{ post.id }}/">
-
-<div class="grid-item">
-            <video muted controls>
-                <source src="{{ post.media.url }}">
-            </video>
         </div>
-        
 
-</a>
+    </div>
 
-    {% endif %}
 
-{% endfor %}
+    <!-- DETAILS -->
+    <div class="profile-card contact-card">
+
+        <h3>Profile Details</h3>
+
+        <p>📍 {{ profile.location }}</p>
+
+        <p>🌐 {{ profile.website }}</p>
+
+    </div>
+
+
+    <!-- BUTTONS -->
+    <div class="profile-buttons">
+
+        <a href="/edit-profile/" class="edit-btn">
+            ✏ Edit Profile
+        </a>
+
+        <button class="share-btn">
+            🔗 Share Profile
+        </button>
+
+    </div>
+
+
+    <!-- TABS -->
+    <div class="tab-buttons">
+
+        <button onclick="showPhotos()">
+            📸 Photos
+        </button>
+
+        <button onclick="showVideos()">
+            🎥 Videos
+        </button>
+
+    </div>
+
+
+    <!-- PHOTOS -->
+    <div id="photos-section" class="posts-grid">
+
+    {% for post in posts %}
+
+        {% if post.media and ".mp4" not in post.media.url %}
+
+            <a href="/post/{{ post.id }}/">
+
+                <div class="grid-item">
+
+                    <img src="{{ post.media.url }}">
+
+                </div>
+
+            </a>
+
+        {% endif %}
+
+    {% endfor %}
+
+    </div>
+
+
+    <!-- VIDEOS -->
+    <div id="videos-section"
+         class="posts-grid"
+         style="display:none;">
+
+    {% for post in posts %}
+
+        {% if post.media and ".mp4" in post.media.url %}
+
+            <a href="/post/{{ post.id }}/">
+
+                <div class="grid-item">
+
+                    <video muted controls>
+
+                        <source src="{{ post.media.url }}">
+
+                    </video>
+
+                </div>
+
+            </a>
+
+        {% endif %}
+
+    {% endfor %}
+
+    </div>
 
 </div>
+
 
 <script>
 
 function showPhotos() {
-    document.getElementById("photos-section").style.display = "grid";
-    document.getElementById("videos-section").style.display = "none";
+
+    document.getElementById(
+        "photos-section"
+    ).style.display = "grid";
+
+    document.getElementById(
+        "videos-section"
+    ).style.display = "none";
 }
 
+
 function showVideos() {
-    document.getElementById("photos-section").style.display = "none";
-    document.getElementById("videos-section").style.display = "grid";
+
+    document.getElementById(
+        "photos-section"
+    ).style.display = "none";
+
+    document.getElementById(
+        "videos-section"
+    ).style.display = "grid";
 }
 
 </script>
-
-</div>
 
 {% endblock %}

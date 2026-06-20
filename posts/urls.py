@@ -33,10 +33,10 @@ urlpatterns = [
     delete_post,
     name='delete_post'
 ),
-    path(
-    'like-post/<int:post_id>/',
-    like_post,
-    name='like_post'
+path(
+    'delete-post/<int:post_id>/',
+    views.delete_post,
+    name='delete_post'
 ),
 
 path(

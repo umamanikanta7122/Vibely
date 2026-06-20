@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<h1>Welcome to Vibely </h1>
+<h1 style="margin-top:-80px;margin-bottom: 10px;">Welcome to Vibely</h1>
 
 <div class="stories-container">
 
@@ -24,26 +24,27 @@
 
 </div>
 
-<h2>Latest Posts</h2>
+<h2 style="margin-bottom: 20px;margin-top: -10px;">Latest Posts</h2>
+
 
 {% for post in posts %}
 
 <div class="post-card">
 
-    <div class="post-header">
+ <div class="post-header">
 
-        <!-- Profile picture opens story -->
+    <div class="post-left">
+
+        <!-- Profile pic -->
         <a href="/story/user/{{ post.user.username }}/">
-
             {% if post.user.profile.profile_picture %}
                 <img
                     src="{{ post.user.profile.profile_picture.url }}"
                     class="post-profile-pic">
             {% endif %}
-
         </a>
 
-        <!-- Username opens profile -->
+        <!-- Username -->
         <a href="/user/{{ post.user.username }}/"
            class="post-user-link">
 
@@ -54,6 +55,31 @@
         </a>
 
     </div>
+
+    <!-- Show only on own posts -->
+    {% if post.user == request.user %}
+
+    <div class="post-menu">
+
+        <span onclick="toggleMenu('{{ post.id }}')"
+              class="delete-icon">
+            ⋮
+        </span>
+
+        <div id="menu-{{ post.id }}"
+             class="delete-menu">
+
+            <a href="/delete-post/{{ post.id }}/">
+                🗑 
+            </a>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
 
     <!-- Post media -->
     {% if post.media %}
@@ -91,31 +117,34 @@
         {{ post.caption }}
     </div>
 
-    <!-- Post actions -->
-    <div class="post-actions">
+  <!-- Post actions -->
+<div class="post-actions">
 
-        <a href="/like-post/{{ post.id }}/">
-            ❤️ {{ post.like_set.count }} Likes
-        </a>
+    <a href="/like-post/{{ post.id }}/">
+        ❤️ {{ post.like_set.count }} Likes
+    </a>
 
-        <a href="#"
-           onclick="toggleComments('{{ post.id }}'); return false;">
-            💬 {{ post.comment_set.count }} Comments
-        </a>
+    <a href="#"
+       onclick="toggleComments('{{ post.id }}'); return false;">
+        💬 {{ post.comment_set.count }} Comments
+    </a>
 
-        <a href="/user/{{ post.user.username }}/">
-            👤 Profile
-        </a>
+    <a href="/user/{{ post.user.username }}/">
+        👤 Profile
+    </a>
 
-        <span>
-            👁 {{ post.views }}
-        </span>
+    <span>
+        👁 {{ post.views }}
+    </span>
 
-        <small>
-            {{ post.created_at|timesince }} ago
-        </small>
+    <small>
+        {{ post.created_at|timesince }} ago
+    </small>
 
-    </div>
+    
+    
+
+</div>
 
     <!-- Comments section -->
     <div id="comments-{{ post.id }}"

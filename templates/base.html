@@ -15,30 +15,37 @@
     type="image/png"
     href="{% static 'images/favicon.png' %}">
 
+    <link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
 </head>
 
 <body>
 
 <nav class="top-nav">
+<div class="logo">
+    <img src="/static/images/vibely-logo.png"
+         class="nav-logo">
 
-    <div class="logo">
-        Vibely
-    </div>
+    Vibely
+</div>
 
     <div class="top-right-section">
 
     {% if user.is_authenticated %}
 
-        <a href="/messages/">
-            💬 Message
-        </a>
-        <a href="/notifications/">
-    🔔 {{ notification_count }}
+     <a href="/messages/">
+    <i class="fa-solid fa-paper-plane"></i>
 </a>
 
-        <a href="/profile/">
-            Profile
-        </a>
+<a href="/notifications/">
+    <i class="fa-solid fa-bell"></i>
+    {{ notification_count }}
+</a>
+
+<a href="/profile/">
+    <i class="fa-solid fa-user"></i>
+</a>
 
         <a href="/logout/" class="logout-btn">
             Logout
@@ -93,17 +100,25 @@ function toggleComments(postId){
 
 <div class="bottom-nav">
 
-    <a href="/">🏠</a>
-
-    <a href="/search/">🔍</a>
-
-    <a href="#" onclick="openUploadMenu()">
-        ➕
+    <a href="/">
+        <i class="fa-solid fa-house"></i>
     </a>
 
-    <a href="/reels/">🎥</a>
+    <a href="/search/">
+        <i class="fa-solid fa-magnifying-glass"></i>
+    </a>
 
-    <a href="/profile/">👤</a>
+    <a href="#" onclick="openUploadMenu()">
+        <i class="fa-solid fa-circle-plus"></i>
+    </a>
+
+    <a href="/reels/">
+        <i class="fa-solid fa-clapperboard"></i>
+    </a>
+
+    <a href="/profile/">
+        <i class="fa-solid fa-user"></i>
+    </a>
 
 </div>
 
@@ -111,19 +126,17 @@ function toggleComments(postId){
      class="upload-menu"
      style="display:none;">
 
-    <a href="/create-post/">
-    📸 Post
+   <a href="/create-post/">
+    <i class="fa-solid fa-image"></i> Post
 </a>
 
-   <a href="/create-story/">
-    🔵 Story
+<a href="/create-story/">
+    <i class="fa-solid fa-circle-dot"></i> Story
 </a>
 
-    <a href="#"
-       onclick="openGallery('reel')">
-        🎥 Reel
-    </a>
-
+<a href="#">
+    <i class="fa-solid fa-video"></i> Reel
+</a>
 </div>
 
 <input
@@ -193,5 +206,21 @@ document.getElementById("notification-btn").addEventListener("click", function()
         </div>
     {% endfor %}
 {% endif %}
+
+<script>
+
+function toggleMenu(postId){
+
+    let menu = document.getElementById("menu-" + postId);
+
+    if(menu.style.display === "block"){
+        menu.style.display = "none";
+    } else {
+        menu.style.display = "block";
+    }
+
+}
+
+</script>
 </body>
 </html>

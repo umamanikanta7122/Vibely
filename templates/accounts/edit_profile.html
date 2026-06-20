@@ -2,18 +2,133 @@
 
 {% block content %}
 
-<h2>Edit Profile</h2>
+<div class="profile-edit-page">
 
-<form method="POST" enctype="multipart/form-data">
+    <div class="profile-edit-card">
 
-    {% csrf_token %}
+        <h1>Edit Profile</h1>
 
-    {{ form.as_p }}
+        <form method="POST" enctype="multipart/form-data">
 
-    <button type="submit">
-        Save Profile
+            {% csrf_token %}
+
+          <!-- COVER PHOTO -->
+<div class="cover-area">
+
+    {% if user.profile.cover_photo %}
+        <img src="{{ user.profile.cover_photo.url }}"
+             class="cover-img"
+             id="cover-preview">
+    {% else %}
+        <div class="cover-placeholder"
+             id="cover-preview">
+            Add Cover Photo
+        </div>
+    {% endif %}
+
+    <input type="file"
+           name="cover_photo"
+           id="coverInput"
+           hidden>
+
+    <button type="button"
+            onclick="document.getElementById('coverInput').click()"
+            class="cover-btn">
+
+         Edit Cover
+
     </button>
 
-</form>
+</div>
+
+            <!-- PROFILE PHOTO -->
+            <div class="profile-pic-section">
+
+                <img src="{{ user.profile.profile_picture.url }}"
+                     class="profile-edit-pic"
+                     id="profile-preview">
+
+                <input type="file"
+                       name="profile_picture"
+                       id="profileInput"
+                       hidden>
+
+                <button type="button"
+                        onclick="document.getElementById('profileInput').click()"
+                        class="custom-upload-btn">
+
+                    Change Photo
+
+                </button>
+
+            </div>
+
+            <!-- BIO -->
+            <label>Bio</label>
+            <textarea name="bio">{{ user.profile.bio }}</textarea>
+
+            <!-- LOCATION -->
+            <label>Location</label>
+            <input type="text"
+                   name="location"
+                   value="{{ user.profile.location }}">
+
+            <!-- WEBSITE -->
+            <label>Website</label>
+            <input type="text"
+                   name="website"
+                   value="{{ user.profile.website }}">
+
+            <button type="submit"
+                    class="save-btn">
+
+                Save Changes
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script>
+
+// preview profile pic
+document.getElementById("profileInput").onchange = function(e){
+
+    let file = e.target.files[0];
+
+    if(file){
+        document.getElementById("profile-preview").src =
+            URL.createObjectURL(file);
+    }
+}
+
+// preview cover photo
+document.getElementById("coverInput").onchange = function(e){
+
+    let file = e.target.files[0];
+
+    if(file){
+
+        let cover =
+            document.getElementById("cover-preview");
+
+        if(cover.tagName !== "IMG"){
+
+            cover.outerHTML =
+            "<img id='cover-preview' class='cover-img'>";
+
+            cover =
+            document.getElementById("cover-preview");
+        }
+
+        cover.src =
+            URL.createObjectURL(file);
+    }
+}
+
+</script>
 
 {% endblock %}

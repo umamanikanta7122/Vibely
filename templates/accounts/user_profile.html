@@ -2,106 +2,151 @@
 
 {% block content %}
 
-<div class="profile-user-row">
+<div class="profile-container">
+
+    <!-- TOP SECTION -->
+    <div class="profile-top">
+
+        {% if profile_user.profile.cover_photo %}
+            <img src="{{ profile_user.profile.cover_photo.url }}"
+                 class="profile-cover">
+        {% endif %}
+
+        {% if profile_user.profile.profile_picture %}
+            <img src="{{ profile_user.profile.profile_picture.url }}"
+                 class="profile-pic">
+        {% endif %}
+
+        <h1 class="profile-name">
+            @{{ profile_user.username }}
+        </h1>
+
+    </div>
 
 
-{% if profile_user.profile.profile_picture %}
-<img
-    src="{{ profile_user.profile.profile_picture.url }}"
-    class="profile-pic">
-{% endif %}
+    <!-- STATS + ABOUT -->
+    <div class="profile-main-row">
 
-<h1 class="profile-name">
-    {{ profile_user.username }}
-</h1>
+        <!-- Stats -->
+        <div class="profile-card stats-card">
 
+            <h3>Stats</h3>
 
-</div>
+            <div class="stat-box">
+                <strong>{{ posts.count }}</strong>
+                <p>Posts</p>
+            </div>
 
-<div class="profile-stats">
+            <div class="stat-box">
+                <strong>{{ followers_count }}</strong>
+                <p>Followers</p>
+            </div>
 
+            <div class="stat-box">
+                <strong>{{ following_count }}</strong>
+                <p>Following</p>
+            </div>
 
-<div>
-    <strong>{{ posts.count }}</strong>
-    <p>Posts</p>
-</div>
-
-<div>
-    <strong>{{ followers_count }}</strong>
-    <p>Followers</p>
-</div>
-
-<div>
-    <strong>{{ following_count }}</strong>
-    <p>Following</p>
-</div>
+        </div>
 
 
-</div>
+        <!-- Bio -->
+        <div class="profile-card bio-card">
 
-{% if request.user != profile_user %}
+            <h3>About User</h3>
 
-<a href="/follow/{{ profile_user.username }}/"
-class="follow-btn">
+            <p>
+                {{ profile_user.profile.bio|linebreaksbr }}
+            </p>
 
+        </div>
 
-{% if is_following %}
-    Unfollow
-{% else %}
-    Follow
-{% endif %}
-
-
-</a>
-
-{% endif %}
-
-<hr>
-
-<h2>Posts</h2>
-
-{% for post in posts %}
-
-<div style="border:1px solid black;padding:10px;margin:10px;">
+    </div>
 
 
-<p>{{ post.caption }}</p>
+    <!-- DETAILS -->
+    <div class="profile-card contact-card">
 
-{% if post.media %}
+        <h3>Profile Details</h3>
 
-    {% if ".mp4" in post.media.url %}
+        <p>📍 {{ profile_user.profile.location }}</p>
 
-        <video
-            controls
-            style="
-                width:250px;
-                height:400px;
-                object-fit:cover;
-                border-radius:10px;
-            ">
-            <source src="{{ post.media.url }}">
-        </video>
+        <p>🌐 {{ profile_user.profile.website }}</p>
 
-    {% else %}
+    </div>
 
-        <img
-            src="{{ post.media.url }}"
-            style="
-                width:250px;
-                border-radius:10px;
-            ">
+
+    <!-- FOLLOW + CHAT BUTTONS -->
+    {% if request.user != profile_user %}
+
+    <div class="profile-buttons">
+
+        <a href="/follow/{{ profile_user.username }}/"
+           class="edit-btn">
+
+            {% if is_following %}
+                Unfollow
+            {% else %}
+                Follow
+            {% endif %}
+
+        </a>
+
+        <a href="/chat/{{ profile_user.username }}/"
+           class="share-btn">
+
+            💬 Message
+
+        </a>
+
+    </div>
 
     {% endif %}
 
-{% endif %}
 
+    <!-- POSTS -->
+    <h2 style="margin-top:30px; color:white;">
+        Posts
+    </h2>
+
+    <div class="posts-grid">
+
+    {% for post in posts %}
+
+        <a href="/post/{{ post.id }}/">
+
+            <div class="grid-item">
+
+                {% if post.media %}
+
+                    {% if ".mp4" in post.media.url %}
+
+                        <video muted controls>
+
+                            <source src="{{ post.media.url }}">
+
+                        </video>
+
+                    {% else %}
+
+                        <img src="{{ post.media.url }}">
+
+                    {% endif %}
+
+                {% endif %}
+
+            </div>
+
+        </a>
+
+    {% empty %}
+
+        <p>No posts yet.</p>
+
+    {% endfor %}
+
+    </div>
 
 </div>
-
-{% empty %}
-
-<p>No posts.</p>
-
-{% endfor %}
 
 {% endblock %}
