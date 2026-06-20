@@ -32,6 +32,9 @@
         <a href="/messages/">
             💬
         </a>
+        <a href="/notifications/">
+    🔔 {{ notification_count }}
+</a>
 
         <a href="/profile/">
             Profile
@@ -163,7 +166,24 @@ function openGallery(type){
     uploadType = type;
     document.getElementById("galleryInput").click();
 }
-</script><script>
+
+
+
+function likePost(postId){
+    window.location.href = "/like-post/" + postId + "/";
+}
+</script>
+</script>
+<script>
+document.getElementById("notification-btn").addEventListener("click", function(){
+
+    let count = document.getElementById("notif-count");
+
+    if(count){
+        count.innerText = "0";
+    }
+
+});
 </script>
 
 {% if messages %}

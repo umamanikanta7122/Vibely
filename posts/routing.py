@@ -1,3 +1,5 @@
+print("WEBSOCKET ROUTING FILE LOADED")
+
 from django.urls import path
 from .consumers import ChatConsumer
 

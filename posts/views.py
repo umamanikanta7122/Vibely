@@ -166,7 +166,6 @@ def search(request):
     )
 
 
-
 from django.shortcuts import get_object_or_404
 
 def post_detail(request, post_id):
@@ -175,6 +174,10 @@ def post_detail(request, post_id):
         Post,
         id=post_id
     )
+
+    # increase view count only when opening single post
+    post.views += 1
+    post.save()
 
     return render(
         request,
@@ -321,13 +324,14 @@ def chat_room(request, username):
     )
     print("MESSAGES COUNT =", messages.count())
     return render(
-        request,
-        'posts/chat_room.html',
-        {
-            'room_name': room_name,
-            'other_user': other_user,
-            'messages': messages,
-        }
+    request,
+    'posts/chat_room.html',
+    {
+        'room_name': room_name,
+        'other_user': other_user,
+        'chat_messages': messages,
+    }
+
     )
 
 from django.contrib.auth.models import User

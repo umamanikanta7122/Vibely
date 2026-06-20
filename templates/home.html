@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<h1>Welcome to Vibely TEST123 🚀</h1>
+<h1>Welcome to Vibely </h1>
 
 <div class="stories-container">
 
@@ -30,141 +30,146 @@
 
 <div class="post-card">
 
+    <div class="post-header">
 
-<div class="post-header">
+        <!-- Profile picture opens story -->
+        <a href="/story/user/{{ post.user.username }}/">
 
-    <!-- Profile picture opens story -->
+            {% if post.user.profile.profile_picture %}
+                <img
+                    src="{{ post.user.profile.profile_picture.url }}"
+                    class="post-profile-pic">
+            {% endif %}
 
-    <a href="/story/user/{{ post.user.username }}/">
+        </a>
 
-        {% if post.user.profile.profile_picture %}
-            <img
-                src="{{ post.user.profile.profile_picture.url }}"
-                class="post-profile-pic">
-        {% endif %}
+        <!-- Username opens profile -->
+        <a href="/user/{{ post.user.username }}/"
+           class="post-user-link">
 
-    </a>
+            <div class="post-user">
+                {{ post.user.username }}
+            </div>
 
-    <!-- Username opens profile -->
+        </a>
 
-    <a href="/user/{{ post.user.username }}/"
-       class="post-user-link">
+    </div>
 
-        <div class="post-user">
-            {{ post.user.username }}
-        </div>
+    <!-- Post media -->
+    {% if post.media %}
 
-    </a>
+        {% if ".mp4" in post.media.url %}
+<a href="/post/{{ post.id }}/">
 
-</div>
-
-<div class="post-caption">
-    {{ post.caption }}
-</div>
-
-{% if post.media %}
-
-    {% if ".mp4" in post.media.url %}
-
-  <video
+   <video
     width="100%"
     controls
     muted
     autoplay
-    loop>
+    loop
+    ondblclick="likePost('{{ post.id }}')">
 
-    <source src="{{ post.media.url }}">
+        <source src="{{ post.media.url }}">
 
-</video>
+    </video>
 
-    {% else %}
+</a>
 
-        <img
-            src="{{ post.media.url }}"
-            style="width:100%; border-radius:10px; margin-top:10px;">
+        {% else %}
+
+      <img
+    src="{{ post.media.url }}"
+    ondblclick="likePost('{{ post.id }}')"
+    style="width:100%; border-radius:10px; margin-top:10px;">
+
+        {% endif %}
 
     {% endif %}
 
-{% endif %}
+    <!-- Caption BELOW media -->
+    <div class="post-caption">
+        {{ post.caption }}
+    </div>
 
-<div class="post-actions">
+    <!-- Post actions -->
+    <div class="post-actions">
 
-    <a href="/like-post/{{ post.id }}/">
-        ❤️ {{ post.like_set.count }} Likes
-    </a>
+        <a href="/like-post/{{ post.id }}/">
+            ❤️ {{ post.like_set.count }} Likes
+        </a>
 
-    <a href="#"
-       onclick="toggleComments('{{ post.id }}'); return false;">
-        💬 {{ post.comment_set.count }} Comments
-    </a>
+        <a href="#"
+           onclick="toggleComments('{{ post.id }}'); return false;">
+            💬 {{ post.comment_set.count }} Comments
+        </a>
 
-    <a href="/user/{{ post.user.username }}/">
-        👤 Profile
-    </a>
+        <a href="/user/{{ post.user.username }}/">
+            👤 Profile
+        </a>
 
-    <span>
-        👁 {{ post.views }}
-    </span>
+        <span>
+            👁 {{ post.views }}
+        </span>
 
-    <small>
-        {{ post.created_at|timesince }} ago
-    </small>
+        <small>
+            {{ post.created_at|timesince }} ago
+        </small>
 
-</div>
+    </div>
 
-<div id="comments-{{ post.id }}"
-     class="comment-section"
-     style="display:none;">
+    <!-- Comments section -->
+    <div id="comments-{{ post.id }}"
+         class="comment-section"
+         style="display:none;">
 
-    {% for comment in post.comment_set.all %}
+        {% for comment in post.comment_set.all %}
 
-        <div class="comment-item">
+            <div class="comment-item">
 
-            {% if comment.user.profile.profile_picture %}
-                <img
-                    src="{{ comment.user.profile.profile_picture.url }}"
-                    class="comment-pic">
-            {% endif %}
+                {% if comment.user.profile.profile_picture %}
+                    <img
+                        src="{{ comment.user.profile.profile_picture.url }}"
+                        class="comment-pic">
+                {% endif %}
 
-            <div class="comment-content">
+                <div class="comment-content">
 
-                <span class="comment-user">
-                    {{ comment.user.username }}
-                </span>
+                    <span class="comment-user">
+                        {{ comment.user.username }}
+                    </span>
 
-                <span class="comment-text">
-                    {{ comment.text }}
-                </span>
+                    <span class="comment-text">
+                        {{ comment.text }}
+                    </span>
+
+                </div>
 
             </div>
 
-        </div>
+        {% empty %}
 
-    {% empty %}
+            <p>No comments yet.</p>
 
-        <p>No comments yet.</p>
+        {% endfor %}
 
-    {% endfor %}
+        <form method="POST"
+              action="/comment/{{ post.id }}/"
+              class="comment-form">
 
-    <form method="POST"
-          action="/comment/{{ post.id }}/"
-          class="comment-form">
+            {% csrf_token %}
 
-        {% csrf_token %}
+            <input
+                type="text"
+                name="text"
+                placeholder="Add comment">
 
-        <input
-            type="text"
-            name="text"
-            placeholder="Add comment">
+            <button type="submit">
+                Post
+            </button>
 
-        <button type="submit">
-            Post
-        </button>
+        </form>
 
-    </form>
-
-</div>
-
+    </div>
 
 </div>
 

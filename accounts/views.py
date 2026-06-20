@@ -11,28 +11,42 @@ from .models import Profile, Follow
 from posts.models import Post
 from posts.models import Story
 from posts.models import Notification
-
+from django.utils import timezone
+from datetime import timedelta
 
 def home(request):
 
-    for post in Post.objects.all():
-        post.views += 1
-        post.save()
+    # delete expired stories older than 24 hours
+    expired_stories = Story.objects.filter(
+        created_at__lt=timezone.now() - timedelta(hours=24)
+    )
+
+    for story in expired_stories:
+        if story.media:
+            story.media.delete(save=False)
+        story.delete()
+
+   
 
     posts = Post.objects.all().order_by('-created_at')
 
-    all_stories = Story.objects.all()
+    # only active stories (last 24h), newest first
+    all_stories = Story.objects.filter(
+        created_at__gte=timezone.now() - timedelta(hours=24)
+    ).order_by('-created_at')
 
+    # show latest story per user only
     seen_users = []
     stories = []
 
     for story in all_stories:
-
         if story.user not in seen_users:
             stories.append(story)
             seen_users.append(story.user)
 
+    # unread notifications
     notification_count = 0
+
     if request.user.is_authenticated:
         notification_count = Notification.objects.filter(
             user=request.user,
@@ -48,8 +62,6 @@ def home(request):
             'notification_count': notification_count
         }
     )
-
-
 def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
